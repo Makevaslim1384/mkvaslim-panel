@@ -435,13 +435,22 @@ class DatabaseManager:
     # ══════════════════════════════════════════════════════════════════════════════════
 
     async def get_stats(self) -> dict:
-    async with self.get_db() as db:
-        async with db.execute("SELECT COUNT(*) FROM users") as cursor:
-            total_users = (await cursor.fetchone())[0]
-        async with db.execute("SELECT COUNT(*) FROM users WHERE is_active = 1") as cursor:
-            active_users = (await cursor.fetchone())[0]
-        async with db.execute("SELECT SUM(used_traffic_bytes) FROM users") as cursor:
-            total_traffic = (await cursor.fetchone())[0] or 0
+        async with self.get_db() as db:
+            async with db.execute("SELECT COUNT(*) FROM users") as cursor:
+                total_users = (await cursor.fetchone())[0]
+            async with db.execute("SELECT COUNT(*) FROM users WHERE is_active = 1") as cursor:
+                active_users = (await cursor.fetchone())[0]
+            async with db.execute("SELECT SUM(used_traffic_bytes) FROM users") as cursor:
+                total_traffic = (await cursor.fetchone())[0] or 0
+                
+        uptime = int(time.time() - getattr(settings, "START_TIME", time.time()))
+        
+        return {
+            "total_users": total_users,
+            "active_users": active_users,
+            "total_traffic_bytes": total_traffic,
+            "uptime_seconds": uptime
+        }
             
         # Users
         total_users = await self.count_users()
