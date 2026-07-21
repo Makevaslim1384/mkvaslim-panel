@@ -49,6 +49,7 @@ USER appuser
 
 # Add local packages to PATH
 # ENV PATH=/home/appuser/.local/bin:$PATH
+ENV PATH="/root/.local/bin:${PATH}"
 ENV PYTHONPATH=/app
 
 # Environment variables
