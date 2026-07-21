@@ -1,0 +1,47 @@
+# MaKeVaslim Panel - Python Dependencies
+# Core Framework
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+pydantic==2.5.3
+pydantic-settings==2.1.0
+python-multipart==0.0.6
+
+# Database
+aiosqlite==0.19.0
+httpx==0.25.2
+
+# Authentication & Security
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+cryptography==41.0.7
+
+# Async & Concurrency
+asyncio-throttle==1.0.2
+
+# HTTP Client
+# httpx==0.25.2  # Version pinned for python-telegram-bot compatibility
+
+# QR Code Generation
+qrcode[pil]==7.4.2
+Pillow==10.2.0
+
+# Configuration
+python-dotenv==1.0.0
+pyyaml==6.0.1
+
+# Utilities
+python-dateutil==2.8.2
+humanize==4.8.0
+
+# Monitoring & Metrics
+psutil==5.9.7
+prometheus-client==0.19.0
+
+# Telegram Bot
+python-telegram-bot==20.7
+
+# File operations for auto-update
+aiofiles==23.2.1
+
+# Async & Concurrency
+asyncio-throttle==1.0.2

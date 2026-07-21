@@ -1,0 +1,86 @@
+# MaKeVaslim Panel - Cloudflare Worker Configuration
+# Copy this file to wrangler.toml and fill in your values
+
+name = "makevaslim"
+main = "worker/worker.js"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+# ─────────────────────────────────────────────────────────────
+# Bindings
+# ─────────────────────────────────────────────────────────────
+
+# D1 Database (replace with your database ID)
+[[d1_databases]]
+binding = "DB"
+database_name = "makevaslim-db"
+database_id = "your-d1-database-id-here"
+
+# KV Namespace (for caching, sessions)
+[[kv_namespaces]]
+binding = "KV"
+id = "your-kv-namespace-id-here"
+preview_id = "your-preview-kv-namespace-id-here"
+
+# ─────────────────────────────────────────────────────────────
+# Environment Variables (Secrets)
+# ─────────────────────────────────────────────────────────────
+
+[vars]
+# Panel settings
+ADMIN_PASSWORD = "MakeVaslim2024!"
+SECRET_KEY = "your-secret-key-min-32-chars"
+DATA_DIR = "/data"
+
+# Network
+HOST = "0.0.0.0"
+PORT = "8000"
+PUBLIC_DOMAIN = "your-domain.com"
+RAILWAY_PUBLIC_DOMAIN = ""
+
+# Telegram Bot (Optional)
+TELEGRAM_BOT_TOKEN = ""
+TELEGRAM_ADMIN_IDS = ""
+
+# Cloudflare API (for auto-update, DNS management)
+CF_API_TOKEN = ""
+CF_ACCOUNT_ID = ""
+CF_WORKER_NAME = "makevaslim"
+
+# Logging
+DEBUG = "false"
+LOG_LEVEL = "INFO"
+
+# ─────────────────────────────────────────────────────────────
+# Secrets (Set via `wrangler secret put`)
+# ─────────────────────────────────────────────────────────────
+
+# Run these commands to set secrets:
+# wrangler secret put ADMIN_PASSWORD
+# wrangler secret put SECRET_KEY
+# wrangler secret put CF_API_TOKEN
+# wrangler secret put TELEGRAM_BOT_TOKEN
+# wrangler secret put TELEGRAM_ADMIN_IDS
+
+# ─────────────────────────────────────────────────────────────
+# Routes (Custom Domain)
+# ─────────────────────────────────────────────────────────────
+
+[[routes]]
+pattern = "your-domain.com/*"
+zone_name = "your-domain.com"
+
+# ─────────────────────────────────────────────────────────────
+# Triggers
+# ─────────────────────────────────────────────────────────────
+
+[triggers]
+crons = ["0 0 * * *"]  # Daily at midnight UTC (for daily request reset)
+
+# ─────────────────────────────────────────────────────────────
+# Limits
+# ─────────────────────────────────────────────────────────────
+
+[limits]
+cpu_ms = 50
+memory_mb = 128

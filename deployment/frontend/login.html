@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ورود - MaKeVaslim Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Vazirmatn', 'sans-serif'] },
+                    colors: {
+                        amoled: { bg: '#000000', card: '#080b0f', input: '#0d1117', border: '#1c2330' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Vazirmatn', sans-serif; transition: all 0.4s ease; }
+        .glass { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .dark .glass { background: rgba(0, 0, 0, 0.4); border-color: rgba(255, 255, 255, 0.06); }
+        .glow-gold { box-shadow: 0 0 30px rgba(245, 158, 11, 0.15); }
+        .stat-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .stat-card:hover { transform: translateY(-4px) scale(1.01); }
+        .progress-ring { transition: stroke-dashoffset 0.8s ease; }
+        .badge-pulse { animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+        .toast-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+        .toast { padding: 12px 24px; border-radius: 40px; font-weight: bold; font-size: 0.9rem; backdrop-filter: blur(12px); background: rgba(245, 158, 11, 0.9); color: #fff; box-shadow: 0 8px 30px rgba(245, 158, 11, 0.3); border: 1px solid rgba(255, 255, 255, 0.15); transform: translateY(20px); opacity: 0; transition: all 0.5s ease; pointer-events: auto; }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast.error { background: rgba(239, 68, 68, 0.9); border-color: rgba(239, 68, 68, 0.3); box-shadow: 0 8px 30px rgba(239, 68, 68, 0.3); }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-amber-50 to-orange-50 dark:from-[#0a0806] dark:to-[#1a120e] text-stone-800 dark:text-zinc-100 flex flex-col items-center justify-between p-4 md:p-8 font-sans antialiased selection:bg-amber-200 dark:selection:bg-zinc-800 transition-colors duration-300" id="main-body">
+
+<div class="w-full max-w-2xl glass rounded-3xl shadow-2xl p-6 md:p-8 relative overflow-hidden glow-gold">
+    <div class="absolute -top-20 -left-20 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-orange-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="flex justify-center mb-2.5">
+        <svg class="w-12 h-12 md:w-16 md:h-16 text-amber-500 dark:text-amber-400 sunset:text-amber-400 drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="8" y="8" width="8" height="8" rx="1.5" />
+            <path d="M12 6v2" />
+            <circle cx="12" cy="5" r="0.8" fill="currentColor" />
+            <path d="M16 12h2" />
+            <circle cx="18.5" cy="12" r="0.8" fill="currentColor" />
+            <rect x="4" y="10" width="4" height="4" rx="0.5" />
+            <line x1="5" y1="11" x2="7" y2="11" stroke-width="0.5" />
+            <line x1="5" y1="12" x2="7" y2="12" stroke-width="0.5" />
+            <line x1="5" y1="13" x2="7" y2="13" stroke-width="0.5" />
+            <rect x="16" y="10" width="4" height="4" rx="0.5" />
+            <line x1="17" y1="11" x2="19" y2="11" stroke-width="0.5" />
+            <line x1="17" y1="12" x2="19" y2="12" stroke-width="0.5" />
+            <line x1="17" y1="13" x2="19" y2="13" stroke-width="0.5" />
+            <path d="M12 16v2" />
+            <path d="M10 18l2 2 2-2" />
+            <circle cx="10.5" cy="10.5" r="0.5" fill="currentColor" opacity="0.7" />
+            <circle cx="13.5" cy="10.5" r="0.5" fill="currentColor" opacity="0.7" />
+            <circle cx="10.5" cy="13.5" r="0.5" fill="currentColor" opacity="0.7" />
+            <circle cx="13.5" cy="13.5" r="0.5" fill="currentColor" opacity="0.7" />
+        </svg>
+    </div>
+
+    <div class="text-center mb-8 relative z-10">
+        <h1 class="text-2xl font-bold tracking-tight text-amber-950 dark:text-white mb-1">
+            <span class="text-white dark:text-white">اشتراک </span>
+            <span class="text-amber-500 dark:text-amber-400 sunset:text-amber-400">ما</span>
+            <span class="text-white dark:text-white">که</span>
+            <span class="text-amber-500 dark:text-amber-400 sunset:text-amber-400">وصلیم🚀</span>
+        </h1>
+        <div class="inline-block px-3 py-1.5 mt-1 border border-amber-500/30 dark:border-amber-400/30 rounded-xl bg-white/10 dark:bg-zinc-900/30 backdrop-blur-sm shadow-sm">
+            <p class="text-sm md:text-base font-mono font-semibold text-amber-600 dark:text-amber-400 tracking-wide" id="display-username"></p>
+        </div>
+        <div id="live-connections-badge" class="hidden inline-flex items-center gap-2.5 px-4 py-1.5 mt-3 bg-amber-500/10 border-2 border-amber-500/30 text-amber-500 rounded-full text-xs font-bold shadow-md backdrop-blur-sm transition-all duration-300 hover:scale-105">
+            <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+            <span id="live-connections-text">۰ دستگاه متصل</span>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8 relative z-10">
+        <div class="stat-card bg-white/60 dark:bg-zinc-900/40 border border-amber-200/50 dark:border-amber-800/20 rounded-2xl p-5 shadow-sm hover:shadow-md backdrop-blur-sm">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-semibold text-amber-800 dark:text-amber-300 flex items-center gap-1.5">
+                    <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <ellipse cx="12" cy="5" rx="9" ry="3" />
+                        <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
+                        <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+                    </svg>
+                    حجم 📊
+                </span>
+                <span id="volume-pct" class="text-xs font-bold text-amber-600 dark:text-amber-400">۰٪</span>
+            </div>
+            <div class="w-full bg-amber-200/50 dark:bg-amber-950/40 rounded-full h-2.5 overflow-hidden mb-3">
+                <div id="volume-progress" class="bg-gradient-to-r from-amber-500 to-orange-500 h-2.5 rounded-full transition-all duration-1000" style="width: 0%"></div>
+            </div>
+            <div class="flex justify-between text-xs text-amber-800 dark:text-amber-300 font-medium">
+                <span>مصرف شده: <span id="used-vol" class="font-bold text-amber-950 dark:text-amber-100">-</span></span>
+                <span>حجم کل: <span id="limit-vol" class="font-bold text-amber-950 dark:text-amber-100">-</span></span>
+            </div>
+        </div>
+
+        <div class="stat-card bg-white/60 dark:bg-zinc-900/40 border border-amber-200/50 dark:border-amber-800/20 rounded-2xl p-5 shadow-sm hover:shadow-md backdrop-blur-sm">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-semibold text-amber-800 dark:text-amber-300 flex items-center gap-1.5">
+                    <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                        <line x1="16" y1="2" x2="16" y2="6" />
+                        <line x1="8" y1="2" x2="8" y2="6" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                    زمان 📊
+                </span>
+                <span id="expiry-pct" class="text-xs font-bold text-amber-600 dark:text-amber-400">۰٪</span>
+            </div>
+            <div class="w-full bg-amber-200/50 dark:bg-amber-950/40 rounded-full h-2.5 overflow-hidden mb-3">
+                <div id="expiry-progress" class="bg-gradient-to-r from-amber-400 to-amber-600 h-2.5 rounded-full transition-all duration-1000" style="width: 0%"></div>
+            </div>
+            <div class="flex justify-between text-xs text-amber-800 dark:text-amber-300 font-medium">
+                <span>باقی‌مانده: <span id="days-remaining" class="font-bold text-amber-950 dark:text-amber-100">-</span></span>
+                <span>کل اعتبار: <span id="total-days" class="font-bold text-amber-950 dark:text-amber-100">-</span></span>
+            </div>
+        </div>
+
+        <div class="stat-card bg-white/60 dark:bg-zinc-900/40 border border-amber-200/50 dark:border-amber-800/20 rounded-2xl p-5 shadow-sm hover:shadow-md backdrop-blur-sm">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-semibold text-amber-800 dark:text-amber-300 flex items-center gap-1.5">
+                    <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 3v1m0 16v1m0-13v1m0 13v1m-3-9h1m4-4h1m4 4h1m-13 0h1" />
+                    </svg>
+                    ریکوئست 📊
+                </span>
+                <span id="req-pct" class="text-xs font-bold text-amber-600 dark:text-amber-400">۰٪</span>
+            </div>
+            <div class="w-full bg-amber-200/50 dark:bg-amber-950/40 rounded-full h-2.5 overflow-hidden mb-3">
+                <div id="req-progress" class="bg-gradient-to-r from-amber-400 to-amber-600 h-2.5 rounded-full transition-all duration-1000" style="width: 0%"></div>
+            </div>
+            <div class="flex justify-between text-xs text-amber-800 dark:text-amber-300 font-medium">
+                <span>مصرف: <span id="used-req" class="font-bold text-amber-950 dark:text-amber-100">-</span></span>
+                <span>سقف: <span id="limit-req" class="font-bold text-amber-950 dark:text-amber-100">-</span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8 relative z-10">
+        <div class="stat-card bg-white/60 dark:bg-zinc-900/40 border border-amber-200/50 dark:border-amber-800/20 rounded-2xl p-5 shadow-sm hover:shadow-md backdrop-blur-sm">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-semibold text-amber-800 dark:text-amber-300 flex items-center gap-1.5">
+                    <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2v2m0 16v1m-9-13h1m4-4h1m4 4h1m-13 0h1M4 12h1m4-4h1m4 4h1m-13 0h1M12 4v1m0 16v1m0-13v1m0 13v1m-3-9h1m4-4h1m4 4h1m-13 0h1" />
+                    </svg>
+                    آنلاین 📊
+                </span>
+                <span id="online-pct" class="text-xs font-bold text-amber-600 dark:text-amber-400">۰٪</span>
+            </div>
+            <div class="w-full bg-amber-200/50 dark:bg-amber-950/40 rounded-full h-2.5 overflow-hidden mb-3">
+                <div id="online-progress" class="bg-gradient-to-r from-emerald-500 to-teal-500 h-2.5 rounded-full transition-all duration-1000" style="width: 0%"></div>
+            </div>
+            <div class="flex justify-between text-xs text-amber-800 dark:text-amber-300 font-medium">
+                <span>متصل: <span id="online-count" class="font-bold text-amber-950 dark:text-amber-100">-</span></span>
+                <span>سقف: <span id="limit-online" class="font-bold text-amber-950 dark:text-amber-100">-</span></span>
+            </div>
+        </div>
+
+        <div class="stat-card bg-white/60 dark:bg-zinc-900/40 border border-amber-200/50 dark:border-amber-800/20 rounded-2xl p-5 shadow-sm hover:shadow-md backdrop-blur-sm">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-semibold text-amber-800 dark:text-amber-300 flex items-center gap-1.5">
+                    <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 3v1m0 16v1m0-13v1m0 13v1m-3-9h1m4-4h1m4 4h1m-13 0h1M4 12h1m4-4h1m4 4h1m-13 0h1M12 3v1m0 16v1m0-13v1m0 13v1m-3-9h1m4-4h1m4 4h1m-13 0h1" />
+                    </svg>
+                    سرعت 📊
+                </span>
+                <span id="speed-pct" class="text-xs font-bold text-amber-600 dark:text-amber-400">۰٪</span>
+            </div>
+            <div class="w-full bg-amber-200/50 dark:bg-amber-950/40 rounded-full h-2.5 overflow-hidden mb-3">
+                <div id="speed-progress" class="bg-gradient-to-r from-blue-500 to-cyan-500 h-2.5 rounded-full transition-all duration-1000" style="width: 0%"></div>
+            </div>
+            <div class="flex justify-between text-xs text-amber-800 dark:text-amber-300 font-medium">
+                <span>مصرف: <span id="used-speed" class="font-bold text-amber-950 dark:text-amber-100">-</span></span>
+                <span>سقف: <span id="limit-speed" class="font-bold text-amber-950 dark:text-amber-100">-</span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="border-t border-amber-200/30 dark:border-zinc-800/50 pt-6 relative z-10">
+        <h2 class="text-sm font-bold mb-4 flex items-center gap-2 text-amber-800 dark:text-amber-300">
+            <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+            دریافت کانفیگ ها و ساب متنی
+        </h2>
+        <div class="space-y-3">
+            <button onclick="copyTextSub()" class="w-full flex justify-between items-center px-5 py-3.5 bg-white/70 dark:bg-zinc-900/50 border border-amber-200/50 dark:border-amber-800/20 hover:border-amber-500 dark:hover:border-amber-500 rounded-xl text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md backdrop-blur-sm group">
+                <span class="flex items-center gap-2 text-amber-800 dark:text-amber-300 group-hover:text-amber-600 dark:group-hover:text-amber-400">⚡ کپی لینک ساب متنی برای نرم افزار</span>
+                <span class="text-amber-500 text-xs font-bold">کپی</span>
+            </button>
+            <button onclick="copyVlessConfig()" class="w-full flex justify-between items-center px-5 py-3.5 bg-white/70 dark:bg-zinc-900/50 border border-amber-200/50 dark:border-amber-800/20 hover:border-orange-500 dark:hover:border-orange-500 rounded-xl text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md backdrop-blur-sm group">
+                <span class="flex items-center gap-2 text-amber-800 dark:text-amber-300 group-hover:text-orange-600 dark:group-hover:text-orange-400">🛰️ کپی تمامی کانفیگ ها (مستقیم)</span>
+                <span class="text-orange-500 text-xs font-bold">کپی</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="flex items-center justify-center gap-4 mt-6 z-10 flex-wrap">
+        <a href="https://t.me/makevaslim4" target="_blank" class="flex items-center gap-2 px-4 py-2 bg-white/70 dark:bg-zinc-900/50 border border-amber-200/50 dark:border-amber-800/20 rounded-full shadow-sm hover:shadow-md transition text-sm font-bold text-amber-800 dark:text-amber-300 hover:text-amber-600 dark:hover:text-amber-400 group backdrop-blur-sm">
+            <svg class="w-5 h-5 text-amber-500 group-hover:scale-110 transition" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.94-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.37.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .24z"/></svg>
+            Makevaslim
+        </a>
+    </div>
+
+    <div class="text-xs text-zinc-500 dark:text-zinc-500 mt-5 text-center border-t border-zinc-900/10 dark:border-zinc-800/50 pt-4 opacity-80 select-none">
+        طراحی شده توسط تیم 
+        <span class="inline-block align-middle mx-1 font-bold text-amber-700 dark:text-amber-400">ماکه‌وصلیم</span>
+        <span class="inline-block align-middle mx-1 text-amber-500">🖤19🖤18🖤</span>
+    </div>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+    const CURRENT_VERSION = '1.0.0';
+    
+    function showToast(message, type = 'success') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        const colors = type === 'error' 
+            ? 'bg-red-500/90 border-red-400/50' 
+            : 'bg-amber-500/90 border-amber-400/50';
+        toast.className = `px-5 py-3 ${colors} border text-white rounded-full shadow-[0_4px_20px_rgba(245,158,11,0.4)] font-bold text-xs transform transition-all duration-500 translate-y-full opacity-0 whitespace-nowrap`;
+        toast.innerText = message;
+        container.appendChild(toast);
+        requestAnimationFrame(() => {
+            toast.classList.remove('translate-y-full', 'opacity-0');
+        });
+        setTimeout(() => {
+            toast.classList.add('translate-y-full', 'opacity-0');
+            setTimeout(() => toast.remove(), 500);
+        }, 3000);
+    }
+
+    function setTheme(themeName) {
+        const body = document.getElementById('main-body');
+        if (!body) return;
+        body.classList.remove('theme-sunset', 'theme-night', 'bg-amber-50', 'dark:bg-amoled-bg', 'text-stone-800', 'dark:text-zinc-100');
+        body.classList.add('theme-' + themeName);
+        if (themeName === 'night') {
+            body.style.color = '#93c5fd';
+        } else {
+            body.style.color = '#fbd38d';
+        }
+    }
+
+    function getHost() { return window.location.host; }
+
+    function getVlessLink() {
+        const u = window.statusUser;
+        const host = getHost();
+        var ips = [host];
+        if (u.ips) {
+            ips = u.ips.split('\n').map(ip => ip.trim()).filter(ip => ip.length > 0);
+            if (ips.length === 0) ips = [host];
+        }
+        var ports = String(u.port || '443').split(',').map(p => p.trim()).filter(p => p.length > 0);
+        var fp = u.fingerprint || 'chrome';
+        var links = [];
+        var m1 = decodeURIComponent('%E2%9A%A0%EF%B8%8F%D8%A7%DB%8C%D9%86%20%D9%BE%D9%86%D9%84%20%D8%B1%D8%A7%DB%8C%DA%AF%D8%A7%D9%86%20%D9%88%20%D8%BA%DB%8C%D8%B1%20%D9%82%D8%A7%D8%A8%D9%84%20%D9%81%D8%B1%D9%88%D8%B4%20%D8%A7%D8%B3%D8%AA%E2%9A%A0%EF%B8%8F');
+        var m2 = decodeURIComponent('%E2%99%A8%EF%B8%8F%20%40IR_NETLIFY%20%D8%B3%D8%A7%D8%AE%D8%AA%20%D8%B1%D8%A7%DB%8C%DA%AF%D8%A7%D9%86%20%E2%99%A8%EF%B8%8F');
+        links.push('vle' + 'ss://' + (u.uuid || '') + '@0.0.0.0:1?encryption=none&security=none&type=ws&host=' + host + '&path=%2FMa_Ke_Vaslim#' + encodeURIComponent(m1));
+        links.push('vle' + 'ss://' + (u.uuid || '') + '@0.0.0.0:1?encryption=none&security=none&type=ws&host=' + host + '&path=%2FMa_Ke_Vaslim#' + encodeURIComponent(m2));
+        ips.forEach(function(ip) {
+            ports.forEach(function(portStr) {
+                var isTlsPort = ['443', '2053', '2083', '2087', '2096', '8443'].includes(portStr);
+                var tlsVal = isTlsPort ? 'tls' : 'none';
+                var remark = ips.length > 1 ? (u.username + '-' + (ips.indexOf(ip) + 1) + '-' + portStr) : (u.username + '-' + portStr);
+                links.push('vle' + 'ss://' + (u.uuid || '') + '@' + ip + ':' + portStr + '?path=%2FMa_Ke_Vaslim&security=' + tlsVal + '&encryption=none&insecure=0&host=' + host + '&fp=' + fp + '&type=ws&allowInsecure=0&sni=' + host + '#' + encodeURIComponent(remark));
+            });
+        });
+        return links.join('\n');
+    }
+
+    function getSubLink() { return window.location.protocol + '//' + getHost() + '/sub/' + encodeURIComponent(window.statusUser.username); }
+    function getStatusLink() { return window.location.protocol + '//' + getHost() + '/status/' + encodeURIComponent(window.statusUser.username); }
+
+    async function copyTextSub() {
+        try {
+            const subUrl = window.location.protocol + '//' + getHost() + '/sub/' + encodeURIComponent(window.statusUser.username);
+            const response = await fetch(subUrl);
+            const allConfigs = await response.text();
+            await navigator.clipboard.writeText(allConfigs);
+            showToast('✅ همه کانفیگ‌ها با موفقیت کپی شدند، ماکه‌وصلیم.');
+        } catch (error) {
+            showToast('❌ خطا در دریافت کانفیگ‌ها از سرور');
+            console.error(error);
+        }
+    }
+
+    function copyVlessConfig() {
+        const link = getVlessLink();
+        navigator.clipboard.writeText(link).then(() => {
+            showToast('✅ کانفیگ VLESS با موفقیت کپی شد، ماکه‌وصلیم.');
+        }).catch(() => {
+            showToast('❌ خطا در کپی کردن کانفیگ!');
+        });
+    }
+
+    function copyTextSub() {
+        const link = window.location.protocol + '//' + getHost() + '/sub/' + encodeURIComponent(window.statusUser.username);
+        navigator.clipboard.writeText(link).then(() => {
+            showToast('✅ لینک ساب متنی کپی شد، ماکه‌وصلیم.');
+        }).catch(() => {
+            showToast('❌ خطا در کپی کردن لینک ساب!');
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const u = window.statusUser;
+        if (!u) return;
+
+        document.getElementById('display-username').innerText = u.username;
+
+        const badge = document.getElementById('live-connections-badge');
+        badge.classList.remove('hidden');
+
+        if (u.online_count && u.online_count > 0) {
+            document.getElementById('live-connections-text').innerText = u.online_count + (u.max_connections ? '/' + u.max_connections : '') + ' دستگاه متصل';
+            badge.className = 'inline-flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 border border-amber-500/20 text-amber-500 rounded-full text-xs font-bold shadow-sm';
+            badge.querySelector('span.w-2').className = 'w-2 h-2 rounded-full bg-amber-500 animate-pulse';
+        } else {
+            document.getElementById('live-connections-text').innerText = '۰ دستگاه متصل';
+            badge.className = 'inline-flex items-center gap-1.5 px-3 py-1 bg-gray-500/10 border border-gray-500/20 text-gray-500 dark:text-zinc-400 rounded-full text-xs font-bold shadow-sm';
+            badge.querySelector('span.w-2').className = 'w-2 h-2 rounded-full bg-gray-500';
+        }
+
+        // بارگذاری خودکار و تبدیل آنی به فرمت متنی Vless درون کادر
+        const subUrlText = window.location.protocol + '//' + getHost() + '/sub/' + encodeURIComponent(u.username);
+        fetch(subUrlText)
+            .then(res => res.text())
+            .then(rawData => {
+                document.getElementById('configs-text-area').value = decodeSubToVless(rawData);
+            })
+            .catch(err => {
+                document.getElementById('configs-text-area').value = '❌ خطا در بارگذاری متنی کانفیگ‌ها از سرور';
+                console.error(err);
+            });
+
+        const usedGb = u.used_gb || 0;
+        const limitGb = u.limit_gb;
+        const formattedUsed = usedGb < 1 ? (usedGb * 1024).toFixed(0) + ' MB' : usedGb.toFixed(2) + ' GB';
+        document.getElementById('used-vol').innerText = formattedUsed;
+
+        let isVolumeExpired = false;
+        if (limitGb) {
+            document.getElementById('limit-vol').innerText = limitGb + ' GB';
+            const pct = Math.min((usedGb / limitGb) * 100, 100);
+            document.getElementById('volume-pct').innerText = pct.toFixed(0) + '٪';
+            document.getElementById('volume-progress').style.width = pct + '%';
+            const hue = 35 - (pct * 0.35);
+            document.getElementById('volume-progress').style.backgroundColor = 'hsl(' + hue + ', 85%, 45%)';
+            if (usedGb >= limitGb) isVolumeExpired = true;
+        } else {
+            document.getElementById('limit-vol').innerText = 'نامحدود';
+            document.getElementById('volume-pct').innerText = '۰٪';
+            document.getElementById('volume-progress').style.width = '100%';
+            document.getElementById('volume-progress').style.backgroundColor = '#f97316';
+        }
+
+        let daysRemaining = 'نامحدود';
+        let totalDays = 'نامحدود';
+        let isTimeExpired = false;
+        if (u.expiry_days) {
+            totalDays = u.expiry_days + ' روز';
+            if (u.created_at) {
+                const created = new Date(u.created_at);
+                const expiryDate = new Date(created.getTime() + (u.expiry_days * 24 * 60 * 60 * 1000));
+                const diffDays = Math.ceil((expiryDate - new Date()) / (1000 * 60 * 60 * 24));
+                daysRemaining = diffDays > 0 ? diffDays : 0;
+                const pct = Math.max(0, Math.min(100, (daysRemaining / u.expiry_days) * 100));
+                document.getElementById('expiry-pct').innerText = pct.toFixed(0) + '٪';
+                document.getElementById('expiry-progress').style.width = pct + '%';
+                const hue = pct * 0.35;
+                document.getElementById('expiry-progress').style.backgroundColor = 'hsl(' + hue + ', 85%, 45%)';
+                if (new Date() > expiryDate) isTimeExpired = true;
+            }
+        } else {
+            document.getElementById('expiry-pct').innerText = '۰٪';
+            document.getElementById('expiry-progress').style.width = '100%';
+            document.getElementById('expiry-progress').style.backgroundColor = '#eab308';
+        }
+
+        document.getElementById('days-remaining').innerText = daysRemaining === 'نامحدود' ? 'نامحدود' : daysRemaining + ' روز';
+        document.getElementById('total-days').innerText = totalDays;
+
+        const usedReq = u.used_req || 0;
+        const limitReq = u.limit_req;
+        document.getElementById('used-req').innerText = usedReq.toLocaleString();
+
+        let isReqExpired = false;
+        if (limitReq) {
+            document.getElementById('limit-req').innerText = limitReq.toLocaleString();
+            const rPct = Math.min((usedReq / limitReq) * 100, 100);
+            document.getElementById('req-pct').innerText = rPct.toFixed(0) + '٪';
+            document.getElementById('req-progress').style.width = rPct + '%';
+            const rHue = 35 - (rPct * 0.35);
+            document.getElementById('req-progress').style.backgroundColor = 'hsl(' + rHue + ', 85%, 45%)';
+            if (usedReq >= limitReq) isReqExpired = true;
+        } else {
+            document.getElementById('limit-req').innerText = 'نامحدود';
+            document.getElementById('req-pct').innerText = '۰٪';
+            document.getElementById('req-progress').style.width = '100%';
+            document.getElementById('req-progress').style.backgroundColor = '#f97316';
+        }
+
+        const onlineCount = u.online_count || 0;
+        const maxConns = u.max_connections;
+        document.getElementById('online-count').innerText = onlineCount;
+
+        if (maxConns) {
+            document.getElementById('limit-online').innerText = maxConns;
+            const oPct = Math.min((onlineCount / maxConns) * 100, 100);
+            document.getElementById('online-pct').innerText = oPct.toFixed(0) + '٪';
+            document.getElementById('online-progress').style.width = oPct + '%';
+            const oHue = 35 - (oPct * 0.35);
+            document.getElementById('online-progress').style.backgroundColor = 'hsl(' + oHue + ', 85%, 45%)';
+        } else {
+            document.getElementById('limit-online').innerText = 'نامحدود';
+            document.getElementById('online-pct').innerText = '۰٪';
+            document.getElementById('online-progress').style.width = '100%';
+            document.getElementById('online-progress').style.backgroundColor = onlineCount > 0 ? '#ea580c' : '#78716c';
+        }
+
+        const statusCard = document.getElementById('status-card');
+        const statusText = document.getElementById('status-text');
+        if (u.is_active === 0) {
+            statusCard.className = 'mb-6 rounded-2xl p-4 text-center border font-bold relative z-10 bg-red-500/10 border-red-500/30 text-red-500 shadow-md shadow-red-500/5';
+            statusCard.style.boxShadow = 'inset 0 0 12px rgba(239, 68, 68, 0.1)';
+            statusText.innerText = '❌ وضعیت اشتراک: غیرفعال / مسدود دستی';
+        } else if (isVolumeExpired) {
+            statusCard.className = 'mb-6 rounded-2xl p-4 text-center border font-bold relative z-10 bg-orange-500/10 border-orange-500/30 text-orange-500 shadow-md shadow-orange-500/5';
+            statusText.innerText = '⚠️ وضعیت اشتراک: تمام شدن حجم مجاز';
+        } else if (isReqExpired) {
+            statusCard.className = 'mb-6 rounded-2xl p-4 text-center border font-bold relative z-10 bg-orange-500/10 border-orange-500/30 text-orange-500 shadow-md shadow-orange-500/5';
+            statusText.innerText = '⚠️ وضعیت اشتراک: تمام شدن ریکوئست مجاز';
+        } else if (isTimeExpired) {
+            statusCard.className = 'mb-6 rounded-2xl p-4 text-center border font-bold relative z-10 bg-orange-500/10 border-orange-500/30 text-orange-500 shadow-md shadow-orange-500/5';
+            statusText.innerText = '⏳ وضعیت اشتراک: منقضی شده (پایان زمان اعتبار)';
+        } else {
+            statusCard.className = 'mb-6 rounded-2xl p-4 text-center border font-bold relative z-10 bg-amber-500/10 border-amber-500/30 text-amber-500 shadow-md shadow-amber-500/5';
+            statusText.innerText = '✅ وضعیت اشتراک: فعال و متصل';
+        }
+    });
+
+    // تابع اختصاصی تغییر تم داینامیک فایل اول
+    function setTheme(themeName) {
+        const body = document.getElementById('main-body');
+        if (!body) return;
+        body.classList.remove('theme-sunset', 'theme-night', 'bg-amber-50', 'dark:bg-amoled-bg', 'text-stone-800', 'dark:text-zinc-100');
+        body.classList.add('theme-' + themeName);
+        if (themeName === 'night') {
+            body.style.color = '#93c5fd';
+        } else {
+            body.style.color = '#fbd38d';
+        }
+    }
+
+    // کد تبدیل Base64 به لینک‌های VLESS
+    function b64decode(str) {
+        str = str.trim().replace(/-/g, '+').replace(/_/g, '/');
+        while (str.length % 4) str += '=';
+        try { return decodeURIComponent(escape(atob(str))); }
+        catch (e) { try { return atob(str); } catch (e2) { return ''; } }
+    }
+
+    function decodeSubToVless(rawData) {
+        // اگر خروجی سرور base64 بود، آن را دیکود کن
+        if (!/:\/\//.test(rawData)) {
+            rawData = b64decode(rawData);
+        }
+        return rawData;
+    }
+
+    // بارگذاری خودکار و تبدیل آنی به فرمت متنی Vless درون کادر
+    const subUrlText = window.location.protocol + '//' + getHost() + '/sub/' + encodeURIComponent(u.username);
+    fetch(subUrlText)
+        .then(res => res.text())
+        .then(rawData => {
+            document.getElementById('configs-text-area').value = decodeSubToVless(rawData);
+        })
+        .catch(err => {
+            document.getElementById('configs-text-area').value = '❌ خطا در بارگذاری متنی کانفیگ‌ها از سرور';
+            console.error(err);
+        });
+</script>
+</body>
+</html>

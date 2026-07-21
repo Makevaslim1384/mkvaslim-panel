@@ -1,0 +1,43 @@
+# MaKeVaslim Panel - Python Dependencies
+# Core Framework
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+# pydantic 2.8.0+ uses pydantic-core 2.18+ with Python 3.13 support
+pydantic==2.8.0
+pydantic-core==2.20.0
+pydantic-settings==2.1.0
+python-multipart==0.0.6
+
+# Database
+aiosqlite==0.19.0
+httpx==0.25.2
+
+# Authentication & Security
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+cryptography==41.0.7
+
+# Async & Concurrency
+asyncio-throttle==1.0.2
+
+# QR Code Generation
+qrcode==7.4.2
+# Pillow is optional - only needed for QR code generation
+# Pillow==9.5.0
+
+# Configuration
+python-dotenv==1.0.0
+pyyaml==6.0.1
+
+# Utilities
+python-dateutil==2.8.2
+humanize==4.8.0
+
+# Monitoring & Metrics
+psutil==5.9.7
+prometheus-client==0.19.0
+
+# Telegram Bot
+python-telegram-bot==20.7
+
+# Async & Concurrency
