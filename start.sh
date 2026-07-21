@@ -8,7 +8,6 @@ export ADMIN_PASSWORD=${ADMIN_PASSWORD:-"MakeVaslim2024!"}
 export SECRET_KEY=${SECRET_KEY:-""}
 export DATA_DIR=${DATA_DIR:-"/data"}
 # CRITICAL: Inside container, ALWAYS use port 8000. Railway maps external $PORT to container's 8000.
-export PORT=8000
 export HOST=${HOST:-"0.0.0.0"}
 
 # Create data directory if not exists
@@ -52,4 +51,5 @@ asyncio.run(migrate())
 
 # Start the application IMMEDIATELY - ALWAYS on port 8000 inside container
 echo "🚀 Starting MaKeVaslim Panel on \${HOST}:8000..."
-exec python3 -m uvicorn backend.main:app --host "\${HOST}" --port 8000 --workers 1
+# جایگزین خط آخر
+exec python3 -m uvicorn backend.main:app --host "${HOST}" --port "${PORT:-8000}" --workers 1
