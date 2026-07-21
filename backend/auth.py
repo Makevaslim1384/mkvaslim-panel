@@ -242,16 +242,18 @@ async def require_admin(
 # Cookie Helpers
 # ══════════════════════════════════════════════════════════════════════════
 
-def set_session_cookie(response: Response, token: str):
-    """Set session cookie on response."""
+def set_session_cookie(response: Response, token: str, is_https: bool = False) -> None:
+    """تنظیم کوکی نشست با پشتیبانی هوشمند از HTTP و HTTPS"""
+    # اگر برنامه در حالت DEBUG باشد یا درخواست روی HTTPS نباشد، secure=False می‌شود
+    use_secure = is_https and not settings.DEBUG
+    
     response.set_cookie(
-        key=SESSION_COOKIE,
+        key="mk_session",
         value=token,
-        max_age=SESSION_TTL,
         httponly=True,
-        secure=True,  # Requires HTTPS
+        secure=use_secure,
         samesite="lax",
-        path="/",
+        max_age=86400 * 7  # ۷ روز اعتبار
     )
 
 
