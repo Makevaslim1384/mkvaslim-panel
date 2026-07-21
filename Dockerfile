@@ -48,7 +48,7 @@ RUN mkdir -p /data && chown appuser:appuser /data
 USER appuser
 
 # Add local packages to PATH
-ENV PATH=/home/appuser/.local/bin:$PATH
+# ENV PATH=/home/appuser/.local/bin:$PATH
 ENV PYTHONPATH=/app
 
 # Environment variables
