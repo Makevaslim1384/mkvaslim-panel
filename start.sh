@@ -29,7 +29,7 @@ async def init():
         print(f'⚠️ Database init warning: {e}')
 
 asyncio.run(init())
-" &
+" 
 
 # Run migrations in BACKGROUND (non-blocking)
 echo "🔄 Starting migrations in background..."
@@ -47,7 +47,7 @@ async def migrate():
         print(f'⚠️ Migration warning: {e}')
 
 asyncio.run(migrate())
-" &
+" 
 
 # Start the application IMMEDIATELY - ALWAYS on port 8000 inside container
 echo "🚀 Starting MaKeVaslim Panel on \${HOST}:8000..."
