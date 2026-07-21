@@ -435,11 +435,14 @@ class DatabaseManager:
     # ══════════════════════════════════════════════════════════════════════════════════
 
     async def get_stats(self) -> dict:
-        """Get system statistics."""
-        now = time.time()
-        today = datetime.now().strftime("%Y-%m-%d")
-        hour_key = datetime.now().strftime("%Y-%m-%d %H:00")
-
+    async with self.get_db() as db:
+        async with db.execute("SELECT COUNT(*) FROM users") as cursor:
+            total_users = (await cursor.fetchone())[0]
+        async with db.execute("SELECT COUNT(*) FROM users WHERE is_active = 1") as cursor:
+            active_users = (await cursor.fetchone())[0]
+        async with db.execute("SELECT SUM(used_traffic_bytes) FROM users") as cursor:
+            total_traffic = (await cursor.fetchone())[0] or 0
+            
         # Users
         total_users = await self.count_users()
         active_users_row = await self.fetchone(
@@ -474,7 +477,13 @@ class DatabaseManager:
             "req_today": req_today,
             "online_users": online_count,
             "hourly_traffic": hourly,
-            "uptime_seconds": int(time.time() - START_TIME) if 'START_TIME' in globals() else 0,
+            "uptime_seconds": int(time.time() - getattr(settings, "START_TIME", time.time()))
+    
+    return {
+        "total_users": total_users,
+        "active_users": active_users,
+        "total_traffic_bytes": total_traffic,
+        "uptime_seconds": uptime,
         }
 
     # ═══════════════════════════════════════════════════════════════════════════════════
